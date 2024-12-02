@@ -37,7 +37,6 @@ TRODEOAL
 )
 
 in3 =: 1!:1 < 'input/02c.in'
-NB. +/ +./ (H in2)&S &> (,|.&.>) R in2
 G =: ];._2 H in3
 
 NB. like S, but looping around
