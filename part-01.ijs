@@ -1,20 +1,17 @@
-ina =: 1!:1 < 'input/01a.in'
-eg1 =: 'ABBAC'
+in1 =: 1!:1 < 'input/01a.in'
 
 P =: 0 1 3 5 {~ 'ABCD' i. -.&'x' NB. potions (including part b's dragonfly)
 NB. solution to part i:
-+/ P ina
++/ P in1
 
-inb =: 1!:1 < 'input/01b.in'
-eg2 =: 'AxBCDDCAxD'
+in2 =: 1!:1 < 'input/01b.in'
 
 B =: P + (_1+#) - (+/@:('x'&=))   NB. potions for a given battle
 
 NB. solution to part ii:
-+/ , _2 B\ inb
++/ , _2 B\ in2
 
-inc =: 1!:1 < 'input/01c.in'
-eg3 =: 'xBxAAABCDxCC'
+in3 =: 1!:1 < 'input/01c.in'
 
 NB. B general enough to also handle part iii.
-+/ , _3 B\ inc
++/ , _3 B\ in3
