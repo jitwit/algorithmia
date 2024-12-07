@@ -48,10 +48,7 @@
   (apply string-append (fruit-paths)))
 
 (populate)
-(format #t "part i:   ~s~%" (part-a))
-
-(define tree (make-hashtable string-hash string=?))
-(define input (with-input-from-file "input/06b.in" lines-raw))
+(format #t "part i:\t\t~s~%" (part-a))
 
 (define (part-b)
   (list->string
@@ -59,11 +56,9 @@
 	  (string-ref node 0))
 	(fruit-paths))))
 
+(define input (with-input-from-file "input/06b.in" lines-raw))
 (populate)
-(format #t "part ii:  ~s~%" (part-b))
-
-(define tree (make-hashtable string-hash string=?))
-(define input (with-input-from-file "input/06c.in" lines-raw))
+(format #t "part ii:\t~s~%" (part-b))
 
 (define (part-c)
   (list->string
@@ -71,5 +66,6 @@
 	  (string-ref node 0))
 	(fruit-paths))))
 
-(time (populate))
-(format #t "part iii: ~s~%" (part-c))
+(define input (with-input-from-file "input/06c.in" lines-raw))
+(populate)
+(format #t "part iii:\t~s~%" (part-c))
