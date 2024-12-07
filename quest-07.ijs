@@ -27,4 +27,5 @@ T =: <:'-=+'i.LF-.~1!:1 < 'trackloop.txt'
 P =: <:'-=+'i.];._2 ] 1!:1 < 'plans.txt' NB. precomputed plans using A.
 A =: <:'-=+'i.(LF,',A:')-.~1!:1 < 'input/07c.in' NB. opposing plan
 T =: T$~N =: 11 *. # T NB. period
-A i.~ P \: ([:+/10+[:+/\T+(T=0)*(#T)&$)"1 P NB. off by 3???
+S =: ([:+/10+[:+/\T+(T=0)*(#T)&$)"1 P NB. scores
++/ S > (P i. A) { S
