@@ -1,14 +1,3 @@
-in0 =: ] ;._2 ] 0 : 0
-**PCBS**
-**RLNW**
-BV....PT
-CR....HZ
-FL....JW
-SG....MN
-**FTZV**
-**GMJH**
-)
-
 in =: ];._1 LF,1!:1<'input/10a.in'
 R =: {{ '.' -.~ x {~ {. y }}           NB. grab letters from x on row by y
 C =: {{ '.' -.~ x {~"1 {: y }}         NB. grab letters from x on col by y
