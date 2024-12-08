@@ -19,5 +19,5 @@ NB. X =: 156488 352486 546212
 NB. to split sparkleball, difference in dots of 100 at most means we
 NB. can search in region (X/2) +/- 50.
 dp''
-F =: {{ <./ +/"1 M{~(,. y&-) (mid=. <.y%2) + i:50 }}"0
+F =: {{ <./ +/"1 M {~ (,. y&-)(<.y%2)+i:50 }}"0
 +/ F X
