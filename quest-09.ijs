@@ -14,8 +14,6 @@ dp''
 
 S =: 1 3 5 10 15 16 20 24 25 30 37 38 49 50 74 75 100 101
 X =: ". ;._1 LF,1!:1 < 'input/09c.in'
-NB. X =: 156488 352486 546212
-
 NB. to split sparkleball, difference in dots of 100 at most means we
 NB. can search in region (X/2) +/- 50.
 dp''
