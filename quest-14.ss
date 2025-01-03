@@ -20,6 +20,8 @@
 		    (hashtable-ref D leaf +inf.0))
 		  leaves)))
 
+;; could be sped up by only doing bfs from leaves, then find tap point
+;; minimizing murkiness
 (format #t "part iii: ~a~%"
 	(apply min
 	       (map murkiness
