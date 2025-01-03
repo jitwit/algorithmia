@@ -20,7 +20,7 @@
 		    (hashtable-ref D leaf +inf.0))
 		  leaves)))
 
-(format #t "part iii:\t~a~%"
+(format #t "part iii: ~a~%"
 	(apply min
 	       (map murkiness
 		    (filter (lambda (v)
