@@ -4,10 +4,10 @@ NB.     .   .
 NB.     .   .
 NB.     .   .
 NB. where t_i is ith termite and p_i is number of such termites.
-F =: {{ y=.;,.&.>/"1 (G{~{."1 y),.<"0{:"1 y
-        ({."1 y) ({.@,,{:@(+/))/. y }}
+F =: {{({."1 y)({.@,,{:@(+/))/.y=.;,.&.>/"1 (G{~{."1 y),.<"0{:"1 y}}
+
 NB. P iterate F x times 
-P =: {{ {: +/ F^:x 1 ,.~ T i. y }}	
+P =: {{ {: +/ F^:x 1 ,.~ T i. y }}
 
 in =: {{<;._1','-.~':',y}};._1 LF,1!:1<'input/11a.in'
 T =: ;{."1 in           NB. termites
