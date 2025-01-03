@@ -12,11 +12,7 @@ in =: {{< G <;._1',',y}};._2 ] 1!:1<'input/14b.in'
 <: # ~. ; in NB. part b
 
 in =: {{< G <;._1',',y}};._2 ] 1!:1<'input/14c.in'
-in =: {{< G <;._1',',y}};._2 ] 1!:1<'small.in'
-in =: {{< G <;._1',',y}};._2 ] 1!:1<'tiny.in'
 L =: {: &> in NB. leaves
-NB. need to actually search tree instead of L1 distance...
-Mu =: {{ +/ , | L -"1 y }} NB. murkiness
-T =: ; in
-Tr =: /:~ ~. T #~ 0 0 -:"1 ] 0 1 {"1 T
-<./ Mu"1 Tr
+T =: ~. ; in
+(<'output/leaves.txt') 1!:2~ ;LF,"1~ ,/ > 8!:0 L
+(<'output/tree.txt') 1!:2~ ;LF,"1~ ,/ > 8!:0 T
