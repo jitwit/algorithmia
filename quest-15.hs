@@ -1,17 +1,15 @@
-{-# language LambdaCase #-}
+{-# language LambdaCase, TemplateHaskell #-}
 
 module Main where
 
 import Control.Lens
 import Control.Monad
 import Control.Monad.State
-import Data.Bifunctor
 import qualified Data.HashPSQ as Q
 import qualified Data.Map as M
 import Data.Map (Map)
+import Data.Maybe
 import Linear
-
-import Debug.Trace
 
 type Coordinate = V2 Int
 type Grid = Map Coordinate Square
@@ -22,21 +20,24 @@ data Search'Result = S'R
   , distances :: M.Map Coordinate Int }
   deriving (Show)
 
-data Square = Wall | Space | Herb
-  deriving (Show,Eq,Enum,Bounded,Ord)
+data Square = Wall | Space | Lake | Herb Char
+  deriving (Show,Eq,Ord)
+
+makePrisms ''Square
 
 square'of'char :: Char -> Square
 square'of'char = \case
   '.' -> Space
-  'H' -> Herb
-  _   -> Wall
+  '#' -> Wall
+  '~' -> Lake
+  h   -> Herb h
 
 vertices :: Grid -> [Coordinate]
-vertices g = [ v | (v,x) <- M.toList g, x `elem` [Space,Herb] ]
+vertices g = [ v | (v,x) <- M.toList g, x & isn't _Wall ]
 
 adjacent :: Grid -> Coordinate -> [Coordinate]
 adjacent g u = [ v | v <- nesw u, ok $ M.lookup v g ] where
-  ok = \case Just Space -> True; Just Herb -> True; _ -> False
+  ok = \case Just Space -> True; Just (Herb _) -> True; _ -> False
   nesw (V2 x y) = [V2 (x-1) y,V2 (x+1) y, V2 x (y-1), V2 x (y+1)]
 
 grid'of'string :: String -> Grid
@@ -54,20 +55,21 @@ dijkstra' :: Grid -> State (Search'Queue, Search'Result) ()
 dijkstra' g = gets (Q.findMin.fst) >>= \case
   Nothing -> pure ()
   Just (u,d,_) -> do
-    modify (first Q.deleteMin)
+    modifying _1 Q.deleteMin
     forM_ (adjacent g u) $ \v -> do
       (q,S'R ps ds) <- get
-      let d' = d+1
-          Just d'v = M.lookup v ds
-      when (d' < d'v) $ do
-        put $ (Q.insert v d' () q,S'R (M.insert v u ps) (M.insert v d' ds))
+      let d' = d+1; Just d'v = M.lookup v ds
+      when (d' < d'v) $ put $
+        (Q.insert v d' () q,S'R (M.insert v u ps) (M.insert v d' ds))
       dijkstra' g
 
 todo = undefined
 
 main = do
-  xs <- readFile "input/15a.in"
-  let g = grid'of'string xs
-      S'R ps ds = dijkstra g
-      Just dists = traverse id [ M.lookup v ds | (v,Herb) <- M.toList g ]
+  g'a <- grid'of'string <$> readFile "input/15a.in"
+  let S'R ps ds = dijkstra g'a
+      dists = catMaybes [ M.lookup v ds | (v,Herb _) <- M.toList g'a ]
   print $ 2 * minimum dists
+  g'b <- grid'of'string <$> readFile "input/15b.in"
+  let herbs = [ hv | hv@(_, Herb _) <- M.toList g'b ]
+  print herbs
