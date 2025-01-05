@@ -6,18 +6,20 @@ import Control.Lens
 import Control.Monad
 import Control.Monad.State
 import qualified Data.HashPSQ as Q
-import qualified Data.Map as M
-import Data.Map (Map)
+import qualified Data.HashMap.Strict as M
+import Data.HashMap.Strict (HashMap)
+import Data.List
 import Data.Maybe
+import Data.Ord
 import Linear
 
 type Coordinate = V2 Int
-type Grid = Map Coordinate Square
+type Grid = HashMap Coordinate Square
 type Search'Queue = Q.HashPSQ (V2 Int) Int ()
 
 data Search'Result = S'R
-  { parents :: M.Map Coordinate Coordinate
-  , distances :: M.Map Coordinate Int }
+  { parents :: HashMap Coordinate Coordinate
+  , distances :: HashMap Coordinate Int }
   deriving (Show)
 
 data Square = Wall | Space | Lake | Herb Char
@@ -45,10 +47,10 @@ grid'of'string s = M.fromList [ (V2 x y, square'of'char c)
                               | (y,l) <- zip [0..] $ lines s
                               , (x,c) <- zip [-length l`div`2..] l ]
 
-dijkstra :: Grid -> Search'Result
-dijkstra g = snd $ execState (dijkstra' g) (q,s) where
-  q = Q.singleton zero 0 ()
-  s = S'R M.empty $ M.insert zero 0 $ M.fromList $
+dijkstra :: Grid -> Coordinate -> Search'Result
+dijkstra g v = snd $ execState (dijkstra' g) (q,s) where
+  q = Q.singleton v 0 ()
+  s = S'R M.empty $ M.insert v 0 $ M.fromList $
     zip (vertices g) $ repeat maxBound
 
 dijkstra' :: Grid -> State (Search'Queue, Search'Result) ()
@@ -61,15 +63,29 @@ dijkstra' g = gets (Q.findMin.fst) >>= \case
       let d' = d+1; Just d'v = M.lookup v ds
       when (d' < d'v) $ put $
         (Q.insert v d' () q,S'R (M.insert v u ps) (M.insert v d' ds))
-      dijkstra' g
+    dijkstra' g
 
 todo = undefined
 
+part'a g = 2 * minimum d'hs where
+  S'R _ ds = dijkstra g zero
+  d'hs = catMaybes [ M.lookup v ds | (v,Herb _) <- M.toList g ]
+
+part'b g = minimum d where
+  dat = [ (h,v,distances $ dijkstra g v) | (v, h@(Herb _)) <- M.toList g ]
+  [h'a,h'b,h'c,h'd,h'e] = groupBy c $ sortBy (comparing $ view _1) dat
+  c x y = (view _1 x) == (view _1 y)
+  S'R _ d'z = dijkstra g zero
+  dist m x = m M.! x
+  d = [ dist d'z v'a + dist d'a v'c +
+        dist d'c v'e + dist d'e v'd +
+        dist d'd v'b + dist d'b zero
+      | (_,v'a,d'a) <- h'a
+      , (_,v'b,d'b) <- h'b
+      , (_,v'c,d'c) <- h'c
+      , (_,v'd,d'd) <- h'd
+      , (_,v'e,d'e) <- h'e ]
+
 main = do
-  g'a <- grid'of'string <$> readFile "input/15a.in"
-  let S'R ps ds = dijkstra g'a
-      dists = catMaybes [ M.lookup v ds | (v,Herb _) <- M.toList g'a ]
-  print $ 2 * minimum dists
-  g'b <- grid'of'string <$> readFile "input/15b.in"
-  let herbs = [ hv | hv@(_, Herb _) <- M.toList g'b ]
-  print herbs
+  print =<< part'a . grid'of'string <$> readFile "input/15a.in"
+  print =<< part'b . grid'of'string <$> readFile "input/15b.in"  
