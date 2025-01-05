@@ -71,20 +71,15 @@ part'a g = 2 * minimum d'hs where
   S'R _ ds = dijkstra g zero
   d'hs = catMaybes [ M.lookup v ds | (v,Herb _) <- M.toList g ]
 
-part'b g = minimum d where
+part'b g = minimum ds where
   dat = [ (h,v,distances $ dijkstra g v) | (v, h@(Herb _)) <- M.toList g ]
-  [h'a,h'b,h'c,h'd,h'e] = groupBy c $ sortBy (comparing $ view _1) dat
-  c x y = (view _1 x) == (view _1 y)
+  [h'a,h'b,h'c,h'd,h'e] = groupBy (\(x,_,_) (y,_,_) -> x == y) $
+    sortBy (comparing $ view _1) dat
   S'R _ d'z = dijkstra g zero
-  dist m x = m M.! x
-  d = [ dist d'z v'a + dist d'a v'c +
-        dist d'c v'e + dist d'e v'd +
-        dist d'd v'b + dist d'b zero
-      | (_,v'a,d'a) <- h'a
-      , (_,v'b,d'b) <- h'b
-      , (_,v'c,d'c) <- h'c
-      , (_,v'd,d'd) <- h'd
-      , (_,v'e,d'e) <- h'e ]
+  ds = [ d'z M.! v'a + d'a M.! v'c + d'c M.! v'e +
+         d'e M.! v'd + d'd M.! v'b + d'b M.! zero
+       | (_,v'a,d'a) <- h'a, (_,v'b,d'b) <- h'b, (_,v'c,d'c) <- h'c
+       , (_,v'd,d'd) <- h'd, (_,v'e,d'e) <- h'e ]
 
 main = do
   print =<< part'a . grid'of'string <$> readFile "input/15a.in"
