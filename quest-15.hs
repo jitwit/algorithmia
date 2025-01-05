@@ -1,4 +1,4 @@
-{-# language LambdaCase, TemplateHaskell #-}
+{-# language LambdaCase, TemplateHaskell, FlexibleContexts #-}
 
 module Main where
 
@@ -11,9 +11,10 @@ import Data.HashMap.Strict (HashMap)
 import Data.List
 import Data.Maybe
 import Data.Ord
-import Linear
+import Linear (V2(..), zero)
 
 type Coordinate = V2 Int
+type Metric = Coordinate -> Coordinate -> Int
 type Grid = HashMap Coordinate Square
 type Search'Queue = Q.HashPSQ (V2 Int) Int ()
 
@@ -48,22 +49,27 @@ grid'of'string s = M.fromList [ (V2 x y, square'of'char c)
                               , (x,c) <- zip [-length l`div`2..] l ]
 
 dijkstra :: Grid -> Coordinate -> Search'Result
-dijkstra g v = snd $ execState (dijkstra' g) (q,s) where
+dijkstra g v = snd $ execState lp (q,s) where
   q = Q.singleton v 0 ()
   s = S'R M.empty $ M.insert v 0 $ M.fromList $
     zip (vertices g) $ repeat maxBound
+  lp = gets (Q.findMin.fst) >>= \case
+    Nothing -> pure ()
+    Just (u,d,_) -> do
+      modifying _1 Q.deleteMin
+      forM_ (adjacent g u) $ \v -> do
+        (q,S'R ps ds) <- get
+        let d' = d + 1; Just d'v = M.lookup v ds
+        when (d' < d'v) $ put $
+          (Q.insert v d' () q,S'R (M.insert v u ps) (M.insert v d' ds))
+      lp
 
-dijkstra' :: Grid -> State (Search'Queue, Search'Result) ()
-dijkstra' g = gets (Q.findMin.fst) >>= \case
-  Nothing -> pure ()
-  Just (u,d,_) -> do
-    modifying _1 Q.deleteMin
-    forM_ (adjacent g u) $ \v -> do
-      (q,S'R ps ds) <- get
-      let d' = d+1; Just d'v = M.lookup v ds
-      when (d' < d'v) $ put $
-        (Q.insert v d' () q,S'R (M.insert v u ps) (M.insert v d' ds))
-    dijkstra' g
+-- this won't be good enough since we need to be able to find complete tours...
+-- need to do proper dijkstra where herbs so far is visible
+herb'graph :: Grid -> Metric
+herb'graph g = \u v -> (maps M.! u) M.! v where
+  maps = M.fromList [ (v,distances $ dijkstra g v)
+                    | (v, _) <- (zero,undefined) : M.toList g ]
 
 todo = undefined
 
@@ -72,7 +78,8 @@ part'a g = 2 * minimum d'hs where
   d'hs = catMaybes [ M.lookup v ds | (v,Herb _) <- M.toList g ]
 
 part'b g = minimum ds where
-  dat = [ (h,v,distances $ dijkstra g v) | (v, h@(Herb _)) <- M.toList g ]
+  dat = [ (h,v,distances $ dijkstra g v)
+        | (v, h@(Herb _)) <- M.toList g ]
   [h'a,h'b,h'c,h'd,h'e] = groupBy (\(x,_,_) (y,_,_) -> x == y) $
     sortBy (comparing $ view _1) dat
   S'R _ d'z = dijkstra g zero
