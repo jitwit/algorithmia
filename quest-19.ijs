@@ -12,8 +12,8 @@ X D in
 in =: <;._1 LF,1!:1<'input/19b.in'
 X =: >{.in
 in =: >2}.in
-L =: 100 [ rho =:,X D ($$[:i.(*/)@$) in
-]img =: ($in)$(C./(|.#:L)#C.~^:(i.##:L)rho)C.,in
+N =: 100 [ rho =:,X D ($$[:i.(*/)@$) in
+]img =: ($in)$(C./(|.#:N)#C.~^:(i.##:N)rho)C.,in
 }. (,img) #~ 1 = +/\ (,img) e. '<>'
 
 NB. first ideas: brent on whole the lcm of brent on each square... slow!
@@ -23,6 +23,6 @@ NB. then take calculate power of permuation in log(N) time.
 in =: <;._1 LF,1!:1<'input/19c.in'
 X =: >{.in
 in =: >2}.in
-L =: 1048576000 [ rho =:,X D ($$[:i.(*/)@$) in
-img =: ($in)$(C./(|.#:L)#C.~^:(i.##:L)rho)C.,in
+N =: 1048576000 [ rho =:,X D ($$[:i.(*/)@$) in
+img =: ($in)$(C./(|.#:N)#C.~^:(i.##:N)rho)C.,in
 }. (,img) #~ 1 = +/\ (,img) e. '<>'
