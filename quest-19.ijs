@@ -11,12 +11,12 @@ in =: <;._1 LF,1!:1<'input/19b.in'
 X =: >{.in
 in =: >2}.in
 N =: 100 [ rho =:,X D ($$[:i.(*/)@$) in
-]img =: ($in) $ (C./ (|.#:N) # C.~^:(i.##:N) rho)C.,in
+]img =: ($in) $ (C./ (|.#:N) # C.~^:(i.##:N) rho) C. ,in
 }. (,img) #~ 1 = +/\ (,img) e. '<>'
 
 in =: <;._1 LF,1!:1<'input/19c.in'
 X =: >{.in
 in =: >2}.in
 N =: 1048576000 [ rho =:,X D ($$[:i.(*/)@$) in
-img =: ($in) $ (C./ (|.#:N) # C.~^:(i.##:N) rho)C.,in
+img =: ($in) $ (C./ (|.#:N) # C.~^:(i.##:N) rho) C. ,in
 }. (,img) #~ 1 = +/\ (,img) e. '<>'
