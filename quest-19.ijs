@@ -1,4 +1,3 @@
-in =: <;._1 LF,1!:1<'small.in'
 in =: <;._1 LF,1!:1<'input/19a.in'
 X =: >{.in
 in =: >2}.in
@@ -13,19 +12,17 @@ X D in
 in =: <;._1 LF,1!:1<'input/19b.in'
 X =: >{.in
 in =: >2}.in
-B =: {{ ixs=.(1+[:,/,"0/&i.&(_2&+))/$y
-        b=.#ins=.X$~#ixs
-        for_i. i.100*#ins do. y =. (ins{~b|i) y R ixs{~b|i end. }}
-X&D^:100 in
+L =: 100 [ rho =:,X D ($$[:i.(*/)@$) in
+]img =: ($in)$(C./(|.#:L)#C.~^:(i.##:L)rho)C.,in
+}. (,img) #~ 1 = +/\ (,img) e. '<>'
 
-load'algorithmia.ijs'
-in =: <;._1 LF,1!:1<'input/19c.in'
-X =: >{.in
-in =: >2}.in
 NB. first ideas: brent on whole the lcm of brent on each square... slow!
 NB. new idea, view thing as permutation of itself, ie, fill it with
 NB. ints and see what 1 step of process amounts to as a permutation
 NB. then take calculate power of permuation in log(N) time.
-lim =: 1048576000
-rho =:,X D ($$[:i.(*/)@$) in
-($in)$(C./(|.#:lim)#C.~^:(i.##:lim)rho)C.,in
+in =: <;._1 LF,1!:1<'input/19c.in'
+X =: >{.in
+in =: >2}.in
+L =: 1048576000 [ rho =:,X D ($$[:i.(*/)@$) in
+img =: ($in)$(C./(|.#:L)#C.~^:(i.##:L)rho)C.,in
+}. (,img) #~ 1 = +/\ (,img) e. '<>'
