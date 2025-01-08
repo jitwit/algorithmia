@@ -7,9 +7,9 @@ X D in
 
 in =: >2}.in [X =: >{. in =: <;._1 LF,1!:1<'input/19b.in'
 N =: 100 [rho =:,X D ($$[:i.(*/)@$) in
-($in) $ (C./ (#:N) # C.~^:(i.-##:N) rho) C. ,in
+($in) $ ({/ (#:N) # {~^:(i.-##:N) rho) { ,in
 
 in =: >2}.in [X =: >{. in =: <;._1 LF,1!:1<'input/19c.in'
 N =: 1048576000 [rho =:,X D ($$[:i.(*/)@$) in
-img =: ($in) $ (C./ (#:N) # C.~^:(i.-##:N) rho) C. ,in
+img =: ($in) $ ({/ (#:N) # {~^:(i.-##:N) rho) { ,in
 }. (,img) #~ 1 = +/\ (,img) e. '<>'
