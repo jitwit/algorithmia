@@ -7,4 +7,4 @@ A in
 
 in =: -.&' ';._1 LF,(#~[:-.(LF,LF)&E.) 1!:1<'input/10b.in' NB. ayayay
 P =: [: +/ (i.@#) *&>: AZ&i.           NB. power of runic word
-+/ ,(8 8,:8 8) P@A;._3 in
++/ ,(2 2$8) P@A;._3 in
